@@ -10,12 +10,12 @@ void g002stream(uint8_t* src, uint8_t* dst, uint32_t dst_len, uint32_t src_len, 
 	uint8_t* src_end = src + src_len + 8;
 
 	__asm{
-		  PUSHAD
-		  PUSHFD
+          PUSHAD
+          PUSHFD
           MOV ESI,src                         ;  ESI == g00 src address
           MOV EDI,dst                         ;  EDI == dst address
           MOV EBX,dst_len                     ;  EBX == dst length
-		  XOR EDX, EDX
+          XOR EDX, EDX
 
 REALLIVE_0049F008:
           CMP EDI,dst_end
@@ -352,16 +352,8 @@ void _run_g00(std::string &dirsrc, std::string &dirdst, bool isDir){
 		}
 		std::cout<<"successfully extract: "<<c1<<"/"<<c<<std::endl;
 	}else{
-
-		int index = 0;
-		for(int i = dirsrc.length()-1; i>=0 ;i--){
-			if(dirsrc[i] == '\\'){
-				index = i;
-				break;
-			}
-		}
-		
-		__run_g00(dirsrc.substr(0,index),dirsrc.substr(index),dirdst,&c,&c1);
+		int index = dirsrc.find_last_of("\\");
+		__run_g00(dirsrc.substr(0,index+1),dirsrc.substr(index+1),dirdst,&c,&c1);
 		std::cout<<"successfully extract: "<<c1<<"/"<<c<<std::endl;
 	}
 }

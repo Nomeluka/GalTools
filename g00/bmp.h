@@ -1,6 +1,7 @@
 #pragma once 
 #pragma pack(1)
 #include <stdint.h>
+
 #define MAGICNUM 0xFEDCBA98
 #define NULLNUM 0xFFFFFFFF
 

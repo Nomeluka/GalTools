@@ -13,8 +13,8 @@ void test_merge(){
 
 int main(){
 	//test_extract();
-	test_merge();
-	//run_cmd();
+	//test_merge();
+	run_cmd();
 	system("pause");
 	return 0;
 }
