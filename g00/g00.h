@@ -1,4 +1,5 @@
 #pragma once
+#pragma pack(1)
 #include <stdint.h>
 #include <vector>
 #include "bmp.h"
@@ -66,5 +67,5 @@ struct bmp_part{
 };
 
 int extractg00(std::string src_path,std::string file_name,std::string dst_path);
-void g002bmp(uint8_t* src, uint8_t* dst, uint8_t* dst_end);
-void g002stream(uint8_t* src, uint8_t* dst, uint32_t dst_len, uint32_t src_len, uint8_t* dst_end);
+void __run_g00(std::string &dirsrc, std::string &name, std::string &dirdst,int* c, int* c1);
+void _run_g00(std::string &dirsrc, std::string &dirdst, bool isDir);

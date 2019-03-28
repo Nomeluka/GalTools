@@ -1,5 +1,5 @@
 #include "bmp.h"
-#include <iostream>
+#include <stdio.h>
 
 void writebmp(uint8_t* src,uint32_t w, uint32_t h, uint8_t flg, char* dst_path, BITMAPPOSITION* p){
 	// src = byte data
@@ -47,7 +47,7 @@ void writebmp(uint8_t* src,uint32_t w, uint32_t h, uint8_t flg, char* dst_path, 
 }
 
 void fix_alpha(uint8_t* src, uint32_t len){
-	for(int i = 0; i < (len>>2) ; i++){
+	for(uint32_t i = 0; i < (len>>2) ; i++){
 		uint32_t j = i << 2; 
 		uint8_t alpha = *(src + j + 3);
 		src[j] = (src[j] * alpha + 0x7F)/0xFF;

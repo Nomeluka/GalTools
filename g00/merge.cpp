@@ -1,4 +1,5 @@
 #include "merge.h"
+#include "trivial.h"
 #include "bmp.h"
 #include <iostream>
 #include <string>
@@ -6,8 +7,8 @@
 
 void _merge(uint8_t* p1, uint8_t* p2, uint32_t cgw, uint32_t maskw, uint32_t maskh){
 	
-	for(int i = 0; i< maskh; i++){
-		for(int j = 0; j<maskw; j++){
+	for(uint32_t i = 0; i< maskh; i++){
+		for(uint32_t j = 0; j<maskw; j++){
 			uint32_t v = *(uint32_t*)(p1+4*i*cgw+4*j);
 			uint32_t u = *(uint32_t*)(p2 + 4*i*maskw + 4*j);
 			if( u >= 0xFF000000 ){
@@ -19,25 +20,11 @@ void _merge(uint8_t* p1, uint8_t* p2, uint32_t cgw, uint32_t maskw, uint32_t mas
 
 int mergebmp(std::string &cg_path,std::string &mask_path,std::string &dir){
 
-	FILE* pmask = fopen(mask_path.c_str(),"rb");
-	FILE* pcg = fopen(cg_path.c_str(),"rb");
-	if(!pcg && !pmask){
-		return -1; //file error
-	}
-
-	fseek(pmask,0,SEEK_END);
-	fseek(pcg,0,SEEK_END);
-	int len1 = ftell(pcg);
-	int len2 = ftell(pmask);
-	fseek(pmask,0,SEEK_SET);
-	fseek(pcg,0,SEEK_SET);
-
-	uint8_t* src1 = new uint8_t[len1];
-	uint8_t* src2 = new uint8_t[len2];
-	fread(src1,len1,1,pcg);
-	fread(src2,len2,1,pmask);
-	fclose(pcg);
-	fclose(pmask);
+	int len1,len2;
+	uint8_t* src1 = readFileUchar(cg_path,&len1,0);
+	uint8_t* src2 = readFileUchar(mask_path,&len2,0);
+	if(src1 == NULL || src2 == NULL)
+		return -1; // file error
 
 	BITMAPFILEHEADER* f1 = (BITMAPFILEHEADER*) src1;
 	BITMAPFILEHEADER* f2 = (BITMAPFILEHEADER*) src2;
@@ -59,15 +46,15 @@ int mergebmp(std::string &cg_path,std::string &mask_path,std::string &dir){
 
 	_merge(pstart1+4*info1->biWidth*pos->bgy_start + 4*pos->bgy_start,pstart2,info1->biWidth,info2->biWidth,info2->biHeight);
 
-	char cg_name[0x100];
-	char mask_name[0x100];
-	_splitpath((char*)cg_path.c_str(),NULL,NULL,cg_name,NULL);
-	_splitpath((char*)mask_path.c_str(),NULL,NULL,mask_name,NULL);
+	std::string cg_name;
+	std::string mask_name;
+	getFilenameFromPath(cg_path,cg_name,0);
+	getFilenameFromPath(mask_path,mask_name,0);
 
 	if(dir[dir.length()-1] != '\\')
 		dir += "\\";
 
-	std::string dst_path = dir + std::string(cg_name) + "["+std::string(mask_name)+"]" +".bmp";
+	std::string dst_path = dir + cg_name + "["+mask_name+"]" +".bmp";
 
 	FILE* out = fopen(dst_path.c_str(),"wb");
 	fwrite(src1,1,len1,out);

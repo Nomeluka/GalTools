@@ -1,9 +1,9 @@
 #include "g00.h"
+#include "trivial.h"
 #include <string>
 #include <direct.h>
 #include <io.h>
 #include <iostream>
-using namespace std;
 
 void g002stream(uint8_t* src, uint8_t* dst, uint32_t dst_len, uint32_t src_len, uint8_t* dst_end){
 	//reversed from Kud Wafter Realive engine
@@ -119,7 +119,7 @@ void get_type0_info (uint8_t* ptr, g00_type_0* g0){
 	g0 ->dst_len = *(uint32_t*)(ptr + 4);
 }
 
-int extract_type0(uint8_t* ptr,g00_basic* gb, string src_path, string dst_path, string file_name_raw){
+int extract_type0(uint8_t* ptr,g00_basic* gb, std::string src_path, std::string dst_path, std::string file_name_raw){
 	g00_type_0 gt0;
 
 	ptr += sizeof(g00_basic);
@@ -128,7 +128,7 @@ int extract_type0(uint8_t* ptr,g00_basic* gb, string src_path, string dst_path, 
 	ptr += sizeof(g00_type_0);
 	g002bmp(ptr,bmpbuf,bmpbuf+gt0.dst_len);
 	
-	string dst = string(dst_path + file_name_raw + ".bmp");
+	std::string dst = std::string(dst_path + file_name_raw + ".bmp");
 
 	writebmp(bmpbuf,gb->bmpW,gb->bmpH,0,(char*)dst.c_str(),NULL);
 
@@ -188,7 +188,7 @@ void construct_bmp(uint8_t* src,uint8_t** bmp, bmpoffset* b,bmp_info** ptr,uint3
 
 }
 
-int extract_type2(uint8_t* ptr, g00_basic* gb, string src_path, string dst_path, string file_name_raw, uint32_t len){
+int extract_type2(uint8_t* ptr, g00_basic* gb, std::string src_path, std::string dst_path, std::string file_name_raw, uint32_t len){
 	//get g00 type 2 info
 	ptr += sizeof(g00_basic);
 	g00_type2 g;
@@ -222,7 +222,7 @@ int extract_type2(uint8_t* ptr, g00_basic* gb, string src_path, string dst_path,
 
 	BITMAPPOSITION pos;
 
-	for(int i=0; i<gs.bmp_num;i++){
+	for(uint32_t i=0; i<gs.bmp_num;i++){
 		bmp_info* ptr = NULL;
 		construct_bmp(pstream,&gs.bmpvector[i],&gs.bmpoff[i],&ptr,g.dst_len);
 
@@ -232,7 +232,7 @@ int extract_type2(uint8_t* ptr, g00_basic* gb, string src_path, string dst_path,
 
 		counter ++;
 
-		string bmp_path;
+		std::string bmp_path;
 		if(gs.bmp_num == 1)
 			bmp_path = dst_path + file_name_raw + ".bmp";
 		else {
@@ -241,11 +241,11 @@ int extract_type2(uint8_t* ptr, g00_basic* gb, string src_path, string dst_path,
 				const char* d = dst_path.c_str();
 				int a = _mkdir(d);
 				if(a == 0 || (a == -1 && _access(d,0)==0))
-					bmp_path = dst_path + to_string(static_cast<long long> (counter - 1))+".bmp";
+					bmp_path = dst_path + std::to_string(static_cast<long long> (counter - 1))+".bmp";
 				else
 					return -5;
 			}else
-				bmp_path = dst_path + to_string(static_cast<long long> (counter - 1))+".bmp";
+				bmp_path = dst_path + std::to_string(static_cast<long long> (counter - 1))+".bmp";
 		}
 		
 		pos.bgx_start = g.entrylist[i].x1;
@@ -268,7 +268,7 @@ int extract_type2(uint8_t* ptr, g00_basic* gb, string src_path, string dst_path,
 	delete gs.bmpoff;
 	delete g.entrylist;
 
-	for (int j =0 ;j < gs.bmp_num ;j++){
+	for (uint32_t j =0 ;j < gs.bmp_num ;j++){
 		if(gs.bmpvector!=NULL)
 			delete gs.bmpvector[j];
 	}
@@ -278,31 +278,22 @@ int extract_type2(uint8_t* ptr, g00_basic* gb, string src_path, string dst_path,
 	return 0;
 }
 
-int extractg00(string src_path,string file_name, string dst_path){
+int extractg00(std::string src_path,std::string file_name, std::string dst_path){
 
 	int namelen = file_name.length();
 	if(namelen < 4)
 		return -1;
 
-	string g00 = file_name.substr(namelen-4,4);
-	string file_name_raw = file_name.substr(0,namelen-4);
+	std::string g00 = file_name.substr(namelen-4,4);
+	std::string file_name_raw = file_name.substr(0,namelen-4);
 
 	if(g00 != ".g00" && g00!= ".g01")
 		return -1; //not .g00 or .g01 file
 
-	FILE* pFile;
-	pFile= fopen((char*)(src_path+file_name).c_str(),"rb");
-
-	if(!pFile)
+	int len = NULL;
+	uint8_t* g00buf = readFileUchar(src_path+file_name,&len,0);
+	if(g00buf == NULL)
 		return -2; //file error
-
-	fseek(pFile,0,SEEK_END);
-	int len = ftell(pFile);
-	fseek(pFile,0,SEEK_SET);
-
-	uint8_t* g00buf = new uint8_t[len];
-	fread(g00buf,len,1,pFile);
-	fclose(pFile);
 
 	g00_basic gb;
 	get_g00_basic(g00buf, &gb);
@@ -318,3 +309,59 @@ int extractg00(string src_path,string file_name, string dst_path){
 	delete g00buf;
 	return ret_val;
 }; 
+
+void __run_g00(std::string &dirsrc, std::string &name, std::string &dirdst,int* c, int* c1){
+
+	int state = extractg00((char*)(dirsrc.c_str()), (char*)name.c_str(), (char*)(dirdst.c_str())); 
+
+	if(state == 0) { //successfully extract a g00 file
+		(*c1)++;
+		(*c) ++;
+		std::cout<<*c<<" "<<dirsrc+name<<": OK"<<std::endl;
+	}else if(state != -1){ // is a g00 or g01 but having other exceptions 
+		(*c)++;
+		std::string errinfo = dirsrc + name;
+		switch (state){
+		case -5: errinfo += ": mkdir error";break;
+		case -3: errinfo += ": unsupported type";break;
+		case -2: errinfo += ": file error";break;
+		default: errinfo += ": unknown error";break;
+	}
+	std::cout<<(*c)<<" "<<errinfo<<std::endl;
+	}else{
+		//std::cout<<dirsrc+name<<": not g00 file"<<std::endl;
+	}
+}
+
+void _run_g00(std::string &dirsrc, std::string &dirdst, bool isDir){
+
+	if(isDir == true && dirsrc[dirsrc.length() - 1] != '\\')
+		dirsrc += "\\";
+
+	if(dirdst[dirdst.length() - 1] != '\\')
+		dirdst += "\\";
+
+	int c = 0; 
+	int c1 = 0;
+
+	if(isDir){
+		std::vector<std::string> fv;
+		getDirFileList(dirsrc,fv);
+		for(auto i = fv.begin(); i != fv.end(); i++){
+			__run_g00(dirsrc,*i,dirdst,&c,&c1);
+		}
+		std::cout<<"successfully extract: "<<c1<<"/"<<c<<std::endl;
+	}else{
+
+		int index = 0;
+		for(int i = dirsrc.length()-1; i>=0 ;i--){
+			if(dirsrc[i] == '\\'){
+				index = i;
+				break;
+			}
+		}
+		
+		__run_g00(dirsrc.substr(0,index),dirsrc.substr(index),dirdst,&c,&c1);
+		std::cout<<"successfully extract: "<<c1<<"/"<<c<<std::endl;
+	}
+}

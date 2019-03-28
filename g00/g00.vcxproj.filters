@@ -30,6 +30,9 @@
     <ClCompile Include="command.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="trivial.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bmp.h">
@@ -42,6 +45,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="merge.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="trivial.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
