@@ -1,5 +1,10 @@
+#pragma once 
 #include <stdint.h>
 #pragma pack(1)
+
+#define MAGICNUM 0xFEDCBA98
+#define NULLNUM 0xFFFFFFFF
+
 typedef struct tagBITMAPFILEHEADER 
 {  
 uint16_t bfType;    
@@ -23,4 +28,19 @@ typedef struct tagBITMAPINFOHEADER{
 	uint32_t      biClrImportant;
 } BITMAPINFOHEADER;
 
-void writebmp(uint8_t* src,uint32_t w, uint32_t h, uint8_t flg,char* dst_path);
+typedef struct tagBITMAPPOSITION{
+	// for merge usage
+	uint32_t MAGIC;
+	uint32_t bgx_start;
+	uint32_t bgy_start;
+	uint32_t bgx_end;
+	uint32_t bgy_end;
+	uint32_t sub_x;
+	uint32_t sub_y;
+	uint32_t sub_w;
+	uint32_t sub_h;
+	uint32_t params[2];
+}BITMAPPOSITION;
+
+void writebmp(uint8_t* src,uint32_t w, uint32_t h, uint8_t flg, char* dst_path,BITMAPPOSITION* p);
+void fix_alpha(uint8_t* src, uint32_t len);

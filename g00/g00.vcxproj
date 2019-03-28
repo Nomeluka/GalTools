@@ -75,12 +75,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="bmp.cpp" />
+    <ClCompile Include="command.cpp" />
     <ClCompile Include="g00.cpp" />
-    <ClCompile Include="testbench.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="merge.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bmp.h" />
+    <ClInclude Include="command.h" />
     <ClInclude Include="g00.h" />
+    <ClInclude Include="merge.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
