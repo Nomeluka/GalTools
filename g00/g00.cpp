@@ -158,12 +158,7 @@ void construct_bmp(uint8_t* src,uint8_t** bmp, bmpoffset* b,bmp_info** ptr,uint3
 	bmp_info* bmpinfo = (bmp_info*)src;
 	*ptr = bmpinfo; 
 
-	//if(counter == 117){
-	//	d = d;
-	//}
-
 	if(dstlen == b->off || b->len == 0){
-		//cout<<hex<<b->off<<"eof"<<endl;
 		*bmp = NULL;
 		return;
 	}
@@ -182,7 +177,6 @@ void construct_bmp(uint8_t* src,uint8_t** bmp, bmpoffset* b,bmp_info** ptr,uint3
 			/* test flag*/
 			if(bp->u != 0){
 				fix_alpha(src,4*bp->loop2);
-				//memset(*bmp+begin,(100*blockindex+0xae),4*bp->loop2);
 			}
 
 			memcpy(*bmp+begin,src,4*bp->loop2);
@@ -218,18 +212,10 @@ int extract_type2(uint8_t* ptr, g00_basic* gb, string src_path, string dst_path,
 
 	//decode
 	uint32_t l = g.src_len;
-	//cout<<hex<<g.dst_len<<endl;
 	g002stream(ptr+12+24*g.g00_num,pstream,g.dst_len,g.src_len,pstream+g.dst_len);
 
 	//recover bmps
 	g00_stream gs;
-
-	/*
-	FILE* pfile = fopen("D:\\gal\\g00ext\\p.dat","wb");
-	fwrite(pstream,1,g.dst_len,pfile);
-	fclose(pfile);
-	*/
-
 	get_bmp_info(pstream,&gs);
 
 	uint32_t counter = 0;
@@ -238,7 +224,6 @@ int extract_type2(uint8_t* ptr, g00_basic* gb, string src_path, string dst_path,
 
 	for(int i=0; i<gs.bmp_num;i++){
 		bmp_info* ptr = NULL;
-		//cout<<i<<" ";
 		construct_bmp(pstream,&gs.bmpvector[i],&gs.bmpoff[i],&ptr,g.dst_len);
 
 		if(gs.bmpvector[i] == NULL){

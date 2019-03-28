@@ -91,8 +91,6 @@ void _run_g00(std::string &dirsrc, std::string &dirdst, bool isDir){
 	if(dirdst[dirdst.length() - 1] != '\\')
 		dirdst += "\\";
 
-	std::cout<<dirdst<<std::endl;
-	//std::cout<<dirsrc<<" "<<dirdst<<std::endl;
 	int c = 0; 
 	int c1 = 0;
 
@@ -100,7 +98,6 @@ void _run_g00(std::string &dirsrc, std::string &dirdst, bool isDir){
 		std::vector<std::string> fv;
 		getDirFileList(dirsrc,fv);
 		for(auto i = fv.begin(); i != fv.end(); i++){
-			//std::cout<<*i<<std::endl;
 			__run_g00(dirsrc,*i,dirdst,&c,&c1);
 		}
 		std::cout<<"successfully extract: "<<c1<<"/"<<c<<std::endl;

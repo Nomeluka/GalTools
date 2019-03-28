@@ -29,7 +29,6 @@ int mergebmp(std::string &cg_path,std::string &mask_path,std::string &dir){
 	fseek(pcg,0,SEEK_END);
 	int len1 = ftell(pcg);
 	int len2 = ftell(pmask);
-	//std::cout<<std::hex<<len2<<std::endl;
 	fseek(pmask,0,SEEK_SET);
 	fseek(pcg,0,SEEK_SET);
 
@@ -49,9 +48,8 @@ int mergebmp(std::string &cg_path,std::string &mask_path,std::string &dir){
 	BITMAPPOSITION* pos1 = (BITMAPPOSITION*)(src1 + sizeof(BITMAPFILEHEADER)+sizeof(BITMAPINFOHEADER));
 	BITMAPPOSITION* pos = (BITMAPPOSITION*)(src2 + sizeof(BITMAPFILEHEADER)+sizeof(BITMAPINFOHEADER));
 
-	if(info1->biWidth<info2->biWidth+pos->bgx_start || info1->biHeight<info2->biHeight+pos->bgy_start){
+	if(info1->biWidth<info2->biWidth+pos->bgx_start || info1->biHeight<info2->biHeight+pos->bgy_start)
 		return -2 ; // bmp size incorrect
-	}
 
 	if(pos1->bgx_start != NULLNUM || pos->MAGIC != MAGICNUM || pos1->MAGIC != MAGICNUM)
 		return -3; //not a CG bmp or not g00 origin
@@ -61,8 +59,6 @@ int mergebmp(std::string &cg_path,std::string &mask_path,std::string &dir){
 
 	_merge(pstart1+4*info1->biWidth*pos->bgy_start + 4*pos->bgy_start,pstart2,info1->biWidth,info2->biWidth,info2->biHeight);
 
-	//FILE* out = fopen("D:\\gal\\blow.bmp","wb");
-	//std::string dst = dir + 
 	char cg_name[0x100];
 	char mask_name[0x100];
 	_splitpath((char*)cg_path.c_str(),NULL,NULL,cg_name,NULL);
@@ -74,7 +70,6 @@ int mergebmp(std::string &cg_path,std::string &mask_path,std::string &dir){
 	std::string dst_path = dir + std::string(cg_name) + "["+std::string(mask_name)+"]" +".bmp";
 
 	FILE* out = fopen(dst_path.c_str(),"wb");
-	//std::cout<<cg_name<<std::endl;
 	fwrite(src1,1,len1,out);
 	fclose(out);
 
@@ -82,12 +77,3 @@ int mergebmp(std::string &cg_path,std::string &mask_path,std::string &dir){
 	delete src2;
 	return 0;
 }
-
-/*
-	FILE* out = fopen("D:\\gal\\blow.bmp","wb");
-	//std::string dst = dir + 
-
-	fwrite(src1,1,len1,out);
-	fclose(out);
-}
-*/
