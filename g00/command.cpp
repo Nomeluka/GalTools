@@ -82,9 +82,9 @@ void run_cmd(){
 		std::cout<<"Prompt: ";
 		std::cin>>cmd;
 
-		if(cmd == "q")
+		if(cmd == "q"){
 			break;
-
+		}
 		if(cmd == "g00"){
 			run_g00();
 		}else if(cmd == "merge"){

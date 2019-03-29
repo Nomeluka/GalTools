@@ -8,7 +8,7 @@ void _merge(uint8_t* p1, uint8_t* p2, uint32_t cgw, uint32_t maskw, uint32_t mas
 	
 	for(uint32_t i = 0; i< maskh; i++){
 		for(uint32_t j = 0; j<maskw; j++){
-			uint32_t v = *(uint32_t*)(p1+4*i*cgw+4*j);
+			//uint32_t v = *(uint32_t*)(p1+4*i*cgw+4*j);
 			uint32_t u = *(uint32_t*)(p2 + 4*i*maskw + 4*j);
 			if( u >= 0xFF000000 ){
 				*(uint32_t*)(p1+4*i*cgw+4*j) = u;

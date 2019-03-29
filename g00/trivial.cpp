@@ -76,11 +76,11 @@ uint8_t* readFileUchar(std::string &str,int* len,uint8_t u){
 
 void getFilenameFromPath(std::string &path, std::string &filename,uint8_t u){
 
-	char name[0x100];
-	if(u == 0)
-		_splitpath(path.c_str(),NULL,NULL,name,NULL);
+	char name[0x100];  
+	if(u == 0) 
+		_splitpath(path.c_str(),NULL,NULL,name,NULL); // get file
 	else if(u == 1)
-		_splitpath(path.c_str(),NULL,name,NULL,NULL);
+		_splitpath(path.c_str(),NULL,name,NULL,NULL); // get dir
 
 	filename = std::string(name);
 }
