@@ -2,7 +2,6 @@
 #include "trivial.h"
 #include "bmp.h"
 #include <iostream>
-#include <string>
 #include <stdint.h>
 
 void _merge(uint8_t* p1, uint8_t* p2, uint32_t cgw, uint32_t maskw, uint32_t maskh){

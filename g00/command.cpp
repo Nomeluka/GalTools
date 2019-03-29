@@ -62,6 +62,19 @@ void run_merge(){
 
 }
 
+void run_help(){
+	std::vector<std::string> cmdargs;
+	getCmdArgs(cmdargs);
+	
+	if(cmdargs.size() > 0){
+		std::cout<<"Unknown command"<<std::endl;
+		return ;
+	}
+
+	std::cout<<"g00 [src file/dir] [dst dir]"<<std::endl
+	<<"merge [src file1] [src file2] [dst dir]"<<std::endl;
+}
+
 void run_cmd(){
 	std::string cmd;
 
@@ -76,6 +89,8 @@ void run_cmd(){
 			run_g00();
 		}else if(cmd == "merge"){
 			run_merge();
+		}else if(cmd == "h"){
+			run_help();
 		}else{
 			std::cout<<">> Unknown command"<<std::endl;
 		}

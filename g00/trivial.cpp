@@ -1,6 +1,4 @@
 #include "trivial.h"
-#include <stdint.h>
-#include <string>
 #include <regex>
 #include <direct.h>
 #include <io.h>
