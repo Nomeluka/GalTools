@@ -64,3 +64,18 @@ int mergebmp(std::string &cg_path,std::string &mask_path,std::string &dir){
 	delete src2;
 	return 0;
 }
+
+void _run_merge(std::string &cg_path,std::string &mask_path,std::string &dir){
+	int state = mergebmp(cg_path,mask_path, dir);
+
+	std::string info =  cg_path +" <- "+ mask_path;
+
+	switch(state){
+	case 0: info += " OK";break;
+	case -1: info += " file error";break;
+	case -2: info += " bmp size error";break;
+	case -3: info += " missing g00 position info";break;
+	default : info += " unknown error";break;
+	}
+	std::cout<<info<<std::endl;
+}
